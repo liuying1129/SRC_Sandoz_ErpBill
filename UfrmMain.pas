@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Menus, ComCtrls, ToolWin, Buttons,ShellAPI,StrUtils, DB, ADODB,Inifiles;
+  Dialogs, Menus, ComCtrls, ToolWin, Buttons,ShellAPI,StrUtils, DB, ADODB,
+  Inifiles,IdIPWatch,HTTPApp,IdHashMessageDigest,IdHash,IdHTTP;
 
 //==为了通过发送消息更新主窗体状态栏而增加==//
 const
@@ -91,6 +92,13 @@ var
   adotemp22:tadoquery;
   pInStr,pDeStr:Pchar;
   i:integer;
+  IdIPWatch:TIdIPWatch;
+  sLocalIP,sLocalName:string;
+  s1,s3,sort_params,sign:string;
+  MyMD5: TIdHashMessageDigest5;
+  Digest: T4x4LongWordRecord;
+  IdHTTP_Tmp1:TIdHTTP;
+  RespData:TStringStream;
 begin
   frmLogin.ShowModal;
 
@@ -116,6 +124,52 @@ begin
   LoadToolMenu(N8,'select name from CommCode where TypeName=''工具菜单'' order by ID');
 
   ReadIni;
+
+  //调用用户信息接口start
+  IdIPWatch:=TIdIPWatch.Create(nil);
+  IdIPWatch.HistoryEnabled:=false;
+  sLocalIP:=IdIPWatch.LocalIP;
+  sLocalName:=IdIPWatch.LocalName;
+  IdIPWatch.Free;
+  
+  //t1:=FormatDateTime('YYYY-MM-DD hh:nn:ss',now);
+  s1:='insert into AppVisit (SysName,PageName,IP,ComputerName,Customer,UserName,ActionName,ActionTime) values ('''+SYSNAME+''','''+Name+''','''+sLocalIP+''','''+sLocalName+''','''+SCSYDW+''','''+operator_name+''','''+'Show'+''',getdate())';
+  s3:='methodNum='+HTTPEncode(UTF8Encode('AIF012'));
+  //s3:=s3+'&customer='+(HTTPEncode(UTF8Encode(SCSYDW)));
+  //s3:=s3+'&actionTime='+HTTPEncode(UTF8Encode(t1));
+  //s3:=s3+'&sysName='+HTTPEncode(UTF8Encode(SYSNAME));
+  //s3:=s3+'&pageName='+HTTPEncode(UTF8Encode(Name));
+  //s3:=s3+'&ip='+HTTPEncode(UTF8Encode('10.1.2.3'));
+  //s3:=s3+'&userName='+HTTPEncode(UTF8Encode(operator_name));
+  //s3:=s3+'&actionName='+HTTPEncode(UTF8Encode('Show'));
+  s3:=s3+'&sql='+HTTPEncode(UTF8Encode(s1));
+
+  MyMD5 := TIdHashMessageDigest5.Create; 
+  //Digest := MyMD5.HashValue(HTTPEncode(UTF8Encode('actionNameShowactionTime'+t1+'customer'+SCSYDW+'ip10.1.2.3methodNumAIF015pageName'+Name+'sysName'+SYSNAME+'userName'+operator_name)));
+  sort_params:=HTTPEncode(UTF8Encode('methodNumAIF012sql'+s1));
+  sort_params:=StringReplace(sort_params,'!','%21',[rfReplaceAll, rfIgnoreCase]);
+  sort_params:=StringReplace(sort_params,'''','%27',[rfReplaceAll, rfIgnoreCase]);
+  sort_params:=StringReplace(sort_params,'(','%28',[rfReplaceAll, rfIgnoreCase]);
+  sort_params:=StringReplace(sort_params,')','%29',[rfReplaceAll, rfIgnoreCase]);
+  Digest := MyMD5.HashValue(sort_params);
+  sign:=MyMD5.AsHex(Digest);
+
+  s3:=s3+'&sign='+sign;
+
+  IdHTTP_Tmp1:=TIdHTTP.Create(nil);
+  //经测试
+  //本机有网络，但连接HTTP服务很慢时，如不加超时，会一直挂起
+  //本机无网络，就算不加超时也没问题
+  IdHTTP_Tmp1.ReadTimeout:=2*1000;//毫秒
+  RespData:=TStringStream.Create('');
+  try
+    IdHTTP_Tmp1.Get(BASE_URL+'?'+s3,RespData);
+    //showmessage(UTF8Decode(RespData.DataString));//返回信息//IdHTTP是同步的
+  except
+  end;
+  RespData.Free;
+  IdHTTP_Tmp1.Free;
+  //调用用户信息接口stop
 end;
 
 procedure TfrmMain.N10Click(Sender: TObject);

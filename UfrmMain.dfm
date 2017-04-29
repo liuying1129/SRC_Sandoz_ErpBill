@@ -47,7 +47,7 @@ object frmMain: TfrmMain
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 423
+    Top = 422
     Width = 854
     Height = 19
     Panels = <

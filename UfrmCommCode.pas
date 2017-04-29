@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, Grids, DBGrids, StdCtrls, Buttons, DB, ADODB, DosMove,StrUtils,
-  ULYDataToExcel, ComCtrls;
+  ULYDataToExcel, ComCtrls,IdIPWatch;
 
 type
   TfrmCommCode = class(TForm)
@@ -158,6 +158,8 @@ var
   iReserve5,iReserve6:integer;
   iReserve7,iReserve8:single;
   iReserve9,iReserve10:TDateTime;
+  IdIPWatch:TIdIPWatch;
+  sLocalIP,sLocalName,ss1,ss2,ss3,ss4,ss5:string;
 begin
   //pName:=pchar(trim(LabeledEdit2.Text));
   //pWBM:=GETBM(pName,1);
@@ -177,6 +179,10 @@ begin
       SHOWMESSAGE('请选择通用代码类别！');
       EXIT;
     END;
+
+    ss1:=trim(ComboBox1.Text);
+    ss2:=trim(LabeledEdit1.Text);
+    ss3:=trim(LabeledEdit2.Text);
 
     sqlstr:='Insert into CommCode ('+
                         ' ID,name,Remark,TypeName,Reserve,Reserve2,Reserve3,Reserve4,Reserve5,Reserve6,Reserve7,Reserve8,Reserve9,Reserve10) values ('+
@@ -216,6 +222,13 @@ begin
     adotemp11.Open;
     ADOQuery1.Requery([]);
     Insert_Identity:=adotemp11.fieldbyname('Insert_Identity').AsInteger;
+
+    IdIPWatch:=TIdIPWatch.Create(nil);
+    IdIPWatch.HistoryEnabled:=false;
+    sLocalIP:=IdIPWatch.LocalIP;
+    sLocalName:=IdIPWatch.LocalName;
+    IdIPWatch.Free;
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''新增通用代码'',getdate(),''代码类型:'+ss1+',代码:'+ss2+',名称:'+ss3+''','''+sLocalName+''')');
   end else //修改
   begin
     IF AdoQuery1.RecordCount=0 THEN
@@ -224,6 +237,13 @@ begin
       SHOWMESSAGE('没有记录供你修改，若要新增，请先点击"新增按钮"！');
       EXIT;
     END;
+
+    ss1:=trim(ComboBox1.Text);
+    ss2:=ADOQuery1.fieldbyname('代码').AsString;
+    ss3:=ADOQuery1.fieldbyname('名称').AsString;
+    ss4:=trim(LabeledEdit1.Text);//新代码
+    ss5:=trim(LabeledEdit2.Text);//新名称
+    
     Insert_Identity:=ADOQuery1.fieldbyname('Unid').AsInteger;
     adotemp11.Close;
     adotemp11.SQL.Clear;
@@ -260,6 +280,13 @@ begin
     adotemp11.Parameters.ParamByName('Unid').Value:=Insert_Identity;
     adotemp11.ExecSQL;
     AdoQuery1.Refresh;
+    
+    IdIPWatch:=TIdIPWatch.Create(nil);
+    IdIPWatch.HistoryEnabled:=false;
+    sLocalIP:=IdIPWatch.LocalIP;
+    sLocalName:=IdIPWatch.LocalName;
+    IdIPWatch.Free;
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''修改通用代码'',getdate(),''代码类型:'+ss1+',原代码:'+ss2+',原名称:'+ss3+',新代码:'+ss4+',新名称:'+ss5+''','''+sLocalName+''')');
   end;
 
   adotemp11.Free;
@@ -278,12 +305,18 @@ end;
 procedure TfrmCommCode.BitBtn3Click(Sender: TObject);
 var
   adotemp11:tadoquery;
+  IdIPWatch:TIdIPWatch;
+  sLocalIP,sLocalName,ss1,ss2,ss3:string;
 begin
   if not DBGrid1.DataSource.DataSet.Active then exit;
   if DBGrid1.DataSource.DataSet.RecordCount=0 then exit;
   
   if (MessageDlg('确实要删除该记录吗？',mtWarning,[mbYes,mbNo],0)<>mrYes) then exit;
 
+  ss1:=ComboBox1.Text;
+  ss2:=DBGrid1.DataSource.DataSet.fieldbyname('代码').AsString;
+  ss3:=DBGrid1.DataSource.DataSet.fieldbyname('名称').AsString;
+  
   //删除该部门的人员
   if ComboBox1.Text='部门' then
   begin
@@ -301,6 +334,13 @@ begin
 
     adoquery1.Refresh;
     updateEdit;
+
+    IdIPWatch:=TIdIPWatch.Create(nil);
+    IdIPWatch.HistoryEnabled:=false;
+    sLocalIP:=IdIPWatch.LocalIP;
+    sLocalName:=IdIPWatch.LocalName;
+    IdIPWatch.Free;
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''删除通用代码'',getdate(),''代码类型:'+ss1+',代码:'+ss2+',名称:'+ss3+''','''+sLocalName+''')');
 end;
 
 procedure TfrmCommCode.updateAdoQuery1;

@@ -24,7 +24,7 @@ object frmInputPKT: TfrmInputPKT
     Left = 0
     Top = 0
     Width = 784
-    Height = 330
+    Height = 329
     Align = alClient
     Caption = #24635#21333
     TabOrder = 0
@@ -32,7 +32,7 @@ object frmInputPKT: TfrmInputPKT
       Left = 2
       Top = 15
       Width = 265
-      Height = 313
+      Height = 312
       Align = alLeft
       TabOrder = 0
       object Label1: TLabel
@@ -231,7 +231,7 @@ object frmInputPKT: TfrmInputPKT
       Left = 267
       Top = 15
       Width = 515
-      Height = 313
+      Height = 312
       Align = alClient
       DataSource = DataSource1
       ParentShowHint = False
@@ -248,7 +248,7 @@ object frmInputPKT: TfrmInputPKT
   end
   object GroupBox2: TGroupBox
     Left = 0
-    Top = 330
+    Top = 329
     Width = 784
     Height = 318
     Align = alBottom

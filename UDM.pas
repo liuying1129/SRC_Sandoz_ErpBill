@@ -20,6 +20,7 @@ const
   CryptStr='lc';//加解密种子
   SYSNAME='ERPBILL';
   sDBALIAS='ALIAS_SHHJ';
+	BASE_URL='http://211.97.0.5:8080/YkAPI/service';
 
 var
   DM: TDM;
@@ -42,6 +43,7 @@ function MakeDBConn:boolean;
 procedure LoadGroupName(const comboBox:TcomboBox;const ASel:string);
 procedure SendKeyToControl(const VK:byte;control:Twincontrol);
 Procedure ChangeYouFormAllControlIme(YFormName:TWinControl);//需要更改输入法的窗体名称
+function ExecSQLCmd(AConnectionString:string;ASQL:string):integer;
 
 implementation
 
@@ -209,6 +211,10 @@ begin
   newconnstr := newconnstr + 'data source=' + datasource + ';';
   newconnstr := newconnstr + 'Initial Catalog=' + initialcatalog + ';';
   newconnstr := newconnstr + 'provider=' + 'SQLOLEDB.1' + ';';
+  //Persist Security Info,表示ADO在数据库连接成功后是否保存密码信息
+  //ADO缺省为True,ADO.net缺省为False
+  //程序中会传ADOConnection信息给TADOLYQuery,故设置为True
+  newconnstr := newconnstr + 'Persist Security Info=True;';
   if ifIntegrated then
     newconnstr := newconnstr + 'Integrated Security=SSPI;';
   try
@@ -411,6 +417,32 @@ end;
 procedure TDM.DataModuleCreate(Sender: TObject);
 begin
   MakeDBConn;
+end;
+
+function ExecSQLCmd(AConnectionString:string;ASQL:string):integer;
+var
+  Conn:TADOConnection;
+  Qry:TAdoQuery;
+begin
+  Conn:=TADOConnection.Create(nil);
+  Conn.LoginPrompt:=false;
+  Conn.ConnectionString:=AConnectionString;
+  Qry:=TAdoQuery.Create(nil);
+  Qry.Connection:=Conn;
+  Qry.Close;
+  Qry.SQL.Clear;
+  Qry.SQL.Text:=ASQL;
+  Try
+    Result:=Qry.ExecSQL;
+  except
+    on E:Exception do
+    begin
+      MESSAGEDLG('函数ExecSQLCmd失败:'+E.Message+'。错误的SQL:'+ASQL,mtError,[mbOK],0);
+      Result:=-1;
+    end;
+  end;
+  Qry.Free;
+  Conn.Free;
 end;
 
 end.

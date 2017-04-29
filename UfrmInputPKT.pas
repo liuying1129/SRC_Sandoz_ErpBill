@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, StdCtrls, ComCtrls, Buttons, ToolWin, DB, ADODB,
   DosMove, Grids, DBGrids,StrUtils,ADOLYGetcode, UADOLYQuery, Menus,
-  ActnList,Inifiles,ComObj;
+  ActnList,Inifiles,ComObj,IdIPWatch;
 
 type
   TfrmInputPKT = class(TForm)
@@ -219,6 +219,8 @@ var
   Insert_Identity:integer;
   sGOODSOWNERID:string;
   sIFSHIFANG:string;
+  IdIPWatch:TIdIPWatch;
+  sLocalIP,sLocalName,ss1,ss2:string;
 begin
   if not ifhaspower(sender,powerstr_js_main) then exit;
 
@@ -236,6 +238,8 @@ begin
   if ifNewAdd then //新增
   begin
     ifNewAdd:=false;
+
+    ss1:=LabeledEdit1.Text;
 
     sqlstr:='insert into inf_inpt_pkt_dtl_z (GOODSOWNERID,EXPORDERID,EXPCOMPANYID,ADDINVOICEFLAG,ADDRESSEID,RECEIVEADDR,RECEIVEHEAD,SAMELOTFLAG,TAXFLAG,TRANSMODEID,MEMO) ' +
           ' values (''' + sGOODSOWNERID + ''',''' + LabeledEdit1.Text +
@@ -257,6 +261,13 @@ begin
     adotemp11.Open;
     ADOQuery1.Requery([]);
     Insert_Identity:=adotemp11.fieldbyname('Insert_Identity').AsInteger;
+
+    IdIPWatch:=TIdIPWatch.Create(nil);
+    IdIPWatch.HistoryEnabled:=false;
+    sLocalIP:=IdIPWatch.LocalIP;
+    sLocalName:=IdIPWatch.LocalName;
+    IdIPWatch.Free;
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''新增出库总单'',getdate(),''总单号:'+ss1+''','''+sLocalName+''')');
   end else //修改
   begin
     IF AdoQuery1.RecordCount=0 THEN
@@ -283,6 +294,9 @@ begin
       exit;
     end;    
 
+    ss1:=ADOQuery1.fieldbyname('订单总单ID').AsString;
+    ss2:=LabeledEdit1.Text;
+
     adotemp11.Close;
     adotemp11.SQL.Clear;
     adotemp11.SQL.Text:='update inf_inpt_pkt_dtl_z set GOODSOWNERID=''' + sGOODSOWNERID + ''',EXPORDERID=''' + LabeledEdit1.Text + ''',EXPCOMPANYID=''' + LabeledEdit4.Text +
@@ -300,6 +314,13 @@ begin
 //    adotemp11.Parameters.ParamByName('PRODDATE').Value:=DateTimePicker4.Date ;
     adotemp11.ExecSQL;
     ADOQuery1.Requery([]);
+
+    IdIPWatch:=TIdIPWatch.Create(nil);
+    IdIPWatch.HistoryEnabled:=false;
+    sLocalIP:=IdIPWatch.LocalIP;
+    sLocalName:=IdIPWatch.LocalName;
+    IdIPWatch.Free;
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''修改出库总单'',getdate(),''原总单号:'+ss1+',新总单号:'+SS2+''','''+sLocalName+''')');
   end;
 
   adotemp11.Free;
@@ -356,6 +377,8 @@ procedure TfrmInputPKT.SpeedButton3Click(Sender: TObject);
 var
   adotemp11,adotemp22:tadoquery;
   sIFSHIFANG:string;
+  IdIPWatch:TIdIPWatch;
+  sLocalIP,sLocalName,ss1:string;
 begin
   if not ifhaspower(sender,powerstr_js_main) then exit;
 
@@ -376,6 +399,8 @@ begin
 
   if (MessageDlg('是否真要删除当前主单记录？', mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then exit;
 
+  ss1:=ADOQuery1.fieldbyname('订单总单ID').AsString;
+  
   adotemp11:=tadoquery.Create(nil);
   adotemp11.Connection:=DM.ADOConnection1;
   adotemp11.Close;
@@ -385,6 +410,13 @@ begin
   adotemp11.Free;
 
   ADOQuery1.Requery([]);
+
+  IdIPWatch:=TIdIPWatch.Create(nil);
+  IdIPWatch.HistoryEnabled:=false;
+  sLocalIP:=IdIPWatch.LocalIP;
+  sLocalName:=IdIPWatch.LocalName;
+  IdIPWatch.Free;
+  ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''删除出库总单'',getdate(),''总单号:'+ss1+''','''+sLocalName+''')');
 end;
 
 procedure TfrmInputPKT.LabeledEdit7KeyDown(Sender: TObject; var Key: Word;
@@ -601,6 +633,8 @@ var
   fReserve4:single;
   fQTY:single;
   QTY:string;
+  IdIPWatch:TIdIPWatch;
+  sLocalIP,sLocalName,ss1,ss2:string;
 begin
   if not ifhaspower(sender,powerstr_js_main) then exit;
 
@@ -672,6 +706,8 @@ begin
       QTY:=inttostr(trunc(fQTY));
     end;
 
+    ss1:=LabeledEdit6.Text;
+
     sqlstr:='insert into inf_inpt_pkt_dtl_c (EXPORDERDTLID,GOODSID,LOTNO,GOODSTATUS,QTY,ADDMEDCHECKFLAG,DTLMEMO,INVOICETYPE,PKUNID,SRCID) ' +
           ' values (''' + LabeledEdit6.Text + ''',''' + LabeledEdit7.Text+ ''',''' + LabeledEdit8.Text + ''','''+
           LabeledEdit9.Text+ ''',' + QTY + ',''' + LabeledEdit17.Text + ''',''' + LabeledEdit14.Text+ ''',''' + ifThen(ComboBox4.Text='增值','1','0') + ''',' +
@@ -685,6 +721,13 @@ begin
     adotemp11.Open;
     ADOQuery2.Requery([]);
     Insert_Identity:=adotemp11.fieldbyname('Insert_Identity').AsInteger;
+
+    IdIPWatch:=TIdIPWatch.Create(nil);
+    IdIPWatch.HistoryEnabled:=false;
+    sLocalIP:=IdIPWatch.LocalIP;
+    sLocalName:=IdIPWatch.LocalName;
+    IdIPWatch.Free;
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''新增出库明细'',getdate(),''明细单号:'+ss1+''','''+sLocalName+''')');
   end else //修改
   begin
     IF AdoQuery2.RecordCount=0 THEN
@@ -693,6 +736,9 @@ begin
       SHOWMESSAGE('没有记录供你修改，若要新增，请先点击"新增按钮"！');
       EXIT;
     END;
+
+    ss1:=ADOQuery2.fieldbyname('订单细单ID').AsString;
+    ss2:=LabeledEdit6.Text;
 
     Insert_Identity:=ADOQuery2.fieldbyname('Unid').AsInteger;
 
@@ -709,10 +755,24 @@ begin
     '''  Where    Unid='+inttostr(Insert_Identity);
     try
       adotemp11.EXECSql ;
+
+      IdIPWatch:=TIdIPWatch.Create(nil);
+      IdIPWatch.HistoryEnabled:=false;
+      sLocalIP:=IdIPWatch.LocalIP;
+      sLocalName:=IdIPWatch.LocalName;
+      IdIPWatch.Free;
+      ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''修改出库明细'',getdate(),''成功,原明细单号:'+ss1+',新明细单号:'+SS2+''','''+sLocalName+''')');
     except
       on E:Exception do
       begin
         MESSAGEDLG('修改记录失败:'+E.Message,mtError,[mbOK],0);
+
+        IdIPWatch:=TIdIPWatch.Create(nil);
+        IdIPWatch.HistoryEnabled:=false;
+        sLocalIP:=IdIPWatch.LocalIP;
+        sLocalName:=IdIPWatch.LocalName;
+        IdIPWatch.Free;
+        ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''修改出库明细'',getdate(),''失败,原明细单号:'+ss1+',新明细单号:'+SS2+''','''+sLocalName+''')');
       end;
     end;
     ADOQuery2.Requery([]);
@@ -818,6 +878,8 @@ procedure TfrmInputPKT.SpeedButton5Click(Sender: TObject);
 var
   adotemp11,adotemp22:tadoquery;
   sIFSHIFANG:string;
+  IdIPWatch:TIdIPWatch;
+  sLocalIP,sLocalName,ss1:string;
 begin
   if not ifhaspower(sender,powerstr_js_main) then exit;
 
@@ -840,6 +902,8 @@ begin
   
   if (MessageDlg('是否真要删除当前明细记录？', mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then exit;
 
+  ss1:=ADOQuery2.fieldbyname('订单细单ID').AsString;
+  
   adotemp11:=tadoquery.Create(nil);
   adotemp11.Connection:=DM.ADOConnection1;
   adotemp11.Close;
@@ -849,6 +913,13 @@ begin
   adotemp11.Free;
 
   ADOQuery2.Requery([]);
+  
+  IdIPWatch:=TIdIPWatch.Create(nil);
+  IdIPWatch.HistoryEnabled:=false;
+  sLocalIP:=IdIPWatch.LocalIP;
+  sLocalName:=IdIPWatch.LocalName;
+  IdIPWatch.Free;
+  ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''删除出库明细'',getdate(),''明细单号:'+ss1+''','''+sLocalName+''')');
 end;
 
 procedure TfrmInputPKT.ADOQuery2AfterOpen(DataSet: TDataSet);
@@ -938,6 +1009,9 @@ var
   iQTY:integer;
   fQTY:single;
   sIFSHIFANG:string;
+  
+  IdIPWatch:TIdIPWatch;
+  sLocalIP,sLocalName:string;
 begin
   OpenDialog1.DefaultExt := '.xls';
   OpenDialog1.Filter := 'xls (*.xls)|*.xls';
@@ -1065,6 +1139,13 @@ begin
       adotemp55.SQL.Add(' SELECT SCOPE_IDENTITY() AS Insert_Identity ');
       try
         adotemp55.Open;
+
+        IdIPWatch:=TIdIPWatch.Create(nil);
+        IdIPWatch.HistoryEnabled:=false;
+        sLocalIP:=IdIPWatch.LocalIP;
+        sLocalName:=IdIPWatch.LocalName;
+        IdIPWatch.Free;
+        ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''导入出库单据'',getdate(),''成功,总单号:'+EXPORDERID+''','''+sLocalName+''')');
       except
         on E:Exception do
         begin
@@ -1109,6 +1190,13 @@ begin
                         ''')');
       try
         adotemp33.ExecSQL;
+
+        IdIPWatch:=TIdIPWatch.Create(nil);
+        IdIPWatch.HistoryEnabled:=false;
+        sLocalIP:=IdIPWatch.LocalIP;
+        sLocalName:=IdIPWatch.LocalName;
+        IdIPWatch.Free;
+        ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''导入出库单据'',getdate(),''成功,明细单号:'+EXPORDERDTLID+''','''+sLocalName+''')');
       except
         on E:Exception do
         begin

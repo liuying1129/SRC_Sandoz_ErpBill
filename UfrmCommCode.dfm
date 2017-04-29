@@ -22,7 +22,7 @@ object frmCommCode: TfrmCommCode
     Left = 225
     Top = 0
     Width = 459
-    Height = 462
+    Height = 461
     Align = alClient
     Color = 16767438
     DataSource = DataSource1
@@ -38,7 +38,7 @@ object frmCommCode: TfrmCommCode
     Left = 0
     Top = 0
     Width = 225
-    Height = 462
+    Height = 461
     Align = alLeft
     Color = clSkyBlue
     TabOrder = 1
