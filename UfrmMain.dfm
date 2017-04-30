@@ -109,6 +109,13 @@ object frmMain: TfrmMain
         OnClick = N5Click
       end
     end
+    object N14: TMenuItem
+      Caption = #26597#35810#32479#35745
+      object N15: TMenuItem
+        Caption = #26085#24535#26597#35810
+        OnClick = N15Click
+      end
+    end
     object N6: TMenuItem
       Caption = #35774#32622
       object N7: TMenuItem

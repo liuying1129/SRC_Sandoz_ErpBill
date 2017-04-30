@@ -34,6 +34,8 @@ type
     N12: TMenuItem;
     N9: TMenuItem;
     N13: TMenuItem;
+    N14: TMenuItem;
+    N15: TMenuItem;
     procedure N2Click(Sender: TObject);
     procedure N7Click(Sender: TObject);
     procedure N4Click(Sender: TObject);
@@ -43,6 +45,7 @@ type
     procedure N11Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure N13Click(Sender: TObject);
+    procedure N15Click(Sender: TObject);
   private
     { Private declarations }
     //==为了通过发送消息更新主窗体状态栏而增加==//
@@ -62,7 +65,8 @@ var
 
 implementation
 
-uses UfrmCommCode, UfrmInputASN, UfrmInputPKT, UfrmLogin,UDM, Ufrmdocset;
+uses UfrmCommCode, UfrmInputASN, UfrmInputPKT, UfrmLogin,UDM, Ufrmdocset,
+  UfrmLogQuery;
 
 {$R *.dfm}
 
@@ -300,6 +304,11 @@ begin
   SelFromInvn:=configini.ReadBool('选项','手工制单从库存选取商品',false);
       
   configini.Free;
+end;
+
+procedure TfrmMain.N15Click(Sender: TObject);
+begin
+  frmLogQuery.ShowModal;
 end;
 
 end.

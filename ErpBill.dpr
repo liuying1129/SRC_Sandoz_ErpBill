@@ -8,7 +8,8 @@ uses
   UfrmInputASN in 'UfrmInputASN.pas' {frmInputASN},
   UfrmInputPKT in 'UfrmInputPKT.pas' {frmInputPKT},
   UfrmLogin in 'UfrmLogin.pas' {frmLogin},
-  Ufrmdocset in 'Ufrmdocset.pas' {frmdocset};
+  Ufrmdocset in 'Ufrmdocset.pas' {frmdocset},
+  UfrmLogQuery in 'UfrmLogQuery.pas' {frmLogQuery};
 
 {$R *.res}
 
