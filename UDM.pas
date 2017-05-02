@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Classes, DB, ADODB,Inifiles,Forms{Application±‰¡ø},Menus,ComCtrls,
   StdCtrls,ExtCtrls,Buttons,Dialogs,Controls,Windows,DBGrids,DBCtrls,Mask,
-  IdBaseComponent, IdComponent, IdIPWatch;
+  IdIPWatch;
 
 type
   TDM = class(TDataModule)
