@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, StdCtrls, Buttons, DB, DBTables, DBCtrls, Grids,
-  DBGrids, ADODB, DosMove,inifiles, ActnList, jpeg,IdIPWatch;
+  DBGrids, ADODB, DosMove,inifiles, ActnList, jpeg;
 
 type
   TfrmLogin = class(TForm)
@@ -273,8 +273,6 @@ end;
 procedure TfrmLogin.suiButton3Click(Sender: TObject);
 var
   PWD,PWDfromDB:STRING;
-  IdIPWatch:TIdIPWatch;
-  sLocalIP,sLocalName:string;
 begin
   ADOQuery1.Close;
   ADOQuery1.SQL.Clear;
@@ -296,12 +294,7 @@ begin
     messagedlg('ÃÜÂë´íÎó£¡',mtError,[mbok],0);
     LabeledEdit2.SetFocus;
 
-    IdIPWatch:=TIdIPWatch.Create(nil);
-    IdIPWatch.HistoryEnabled:=false;
-    sLocalIP:=IdIPWatch.LocalIP;
-    sLocalName:=IdIPWatch.LocalName;
-    IdIPWatch.Free;
-    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+LabeledEdit4.Text+''',''µÇÂ¼'',getdate(),''µÇÂ¼Ê§°Ü,ÃÜÂë´íÎó'','''+sLocalName+''')');
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+gsLocalIP+''','''+LabeledEdit4.Text+''',''µÇÂ¼'',getdate(),''µÇÂ¼Ê§°Ü,ÃÜÂë´íÎó'','''+gsLocalName+''')');
   end
   else   //³É¹¦µÇÂ¼
   begin
@@ -312,12 +305,7 @@ begin
     operator_id:=trim(labelededit4.Text);
     SendNotifyMessage(application.mainform.handle,WM_UPDATETEXTSTATUS,0,integer(pchar(#$2+'2:'+operator_id+#$2+'4:'+operator_name)));
     
-    IdIPWatch:=TIdIPWatch.Create(nil);
-    IdIPWatch.HistoryEnabled:=false;
-    sLocalIP:=IdIPWatch.LocalIP;
-    sLocalName:=IdIPWatch.LocalName;
-    IdIPWatch.Free;
-    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''µÇÂ¼'',getdate(),''µÇÂ¼³É¹¦'','''+sLocalName+''')');
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+gsLocalIP+''','''+operator_name+''',''µÇÂ¼'',getdate(),''µÇÂ¼³É¹¦'','''+gsLocalName+''')');
   end;
 end;
 

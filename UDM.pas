@@ -4,7 +4,8 @@ interface
 
 uses
   SysUtils, Classes, DB, ADODB,Inifiles,Forms{Application变量},Menus,ComCtrls,
-  StdCtrls,ExtCtrls,Buttons,Dialogs,Controls,Windows,DBGrids,DBCtrls,Mask;
+  StdCtrls,ExtCtrls,Buttons,Dialogs,Controls,Windows,DBGrids,DBCtrls,Mask,
+  IdBaseComponent, IdComponent, IdIPWatch;
 
 type
   TDM = class(TDataModule)
@@ -31,6 +32,8 @@ var
   operator_id:string;
   SCSYDW:string;
   SelFromInvn:boolean;
+  gsLocalIP:string;
+  gsLocalName:string;
 
 function DeCryptStr(aStr: Pchar; aKey: Pchar): Pchar;stdcall;external 'DESCrypt.dll';//解密
 function EnCryptStr(aStr: Pchar; aKey: Pchar): Pchar;stdcall;external 'DESCrypt.dll';//加密
@@ -415,8 +418,16 @@ begin
 end;
 
 procedure TDM.DataModuleCreate(Sender: TObject);
+var
+  IdIPWatch:TIdIPWatch;
 begin
   MakeDBConn;
+
+  IdIPWatch:=TIdIPWatch.Create(nil);
+  IdIPWatch.HistoryEnabled:=false;
+  gsLocalIP:=IdIPWatch.LocalIP;
+  gsLocalName:=IdIPWatch.LocalName;
+  IdIPWatch.Free;
 end;
 
 function ExecSQLCmd(AConnectionString:string;ASQL:string):integer;

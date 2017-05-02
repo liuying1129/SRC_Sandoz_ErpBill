@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, Grids, DBGrids, StdCtrls, Buttons, DB, ADODB, DosMove,StrUtils,
-  ULYDataToExcel, ComCtrls,IdIPWatch;
+  ULYDataToExcel, ComCtrls;
 
 type
   TfrmCommCode = class(TForm)
@@ -158,8 +158,7 @@ var
   iReserve5,iReserve6:integer;
   iReserve7,iReserve8:single;
   iReserve9,iReserve10:TDateTime;
-  IdIPWatch:TIdIPWatch;
-  sLocalIP,sLocalName,ss1,ss2,ss3,ss4,ss5:string;
+  ss1,ss2,ss3,ss4,ss5:string;
 begin
   //pName:=pchar(trim(LabeledEdit2.Text));
   //pWBM:=GETBM(pName,1);
@@ -223,12 +222,7 @@ begin
     ADOQuery1.Requery([]);
     Insert_Identity:=adotemp11.fieldbyname('Insert_Identity').AsInteger;
 
-    IdIPWatch:=TIdIPWatch.Create(nil);
-    IdIPWatch.HistoryEnabled:=false;
-    sLocalIP:=IdIPWatch.LocalIP;
-    sLocalName:=IdIPWatch.LocalName;
-    IdIPWatch.Free;
-    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''新增通用代码'',getdate(),''代码类型:'+ss1+',代码:'+ss2+',名称:'+ss3+''','''+sLocalName+''')');
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+gsLocalIP+''','''+operator_name+''',''新增通用代码'',getdate(),''代码类型:'+ss1+',代码:'+ss2+',名称:'+ss3+''','''+gsLocalName+''')');
   end else //修改
   begin
     IF AdoQuery1.RecordCount=0 THEN
@@ -281,12 +275,7 @@ begin
     adotemp11.ExecSQL;
     AdoQuery1.Refresh;
     
-    IdIPWatch:=TIdIPWatch.Create(nil);
-    IdIPWatch.HistoryEnabled:=false;
-    sLocalIP:=IdIPWatch.LocalIP;
-    sLocalName:=IdIPWatch.LocalName;
-    IdIPWatch.Free;
-    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''修改通用代码'',getdate(),''代码类型:'+ss1+',原代码:'+ss2+',原名称:'+ss3+',新代码:'+ss4+',新名称:'+ss5+''','''+sLocalName+''')');
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+gsLocalIP+''','''+operator_name+''',''修改通用代码'',getdate(),''代码类型:'+ss1+',原代码:'+ss2+',原名称:'+ss3+',新代码:'+ss4+',新名称:'+ss5+''','''+gsLocalName+''')');
   end;
 
   adotemp11.Free;
@@ -305,8 +294,7 @@ end;
 procedure TfrmCommCode.BitBtn3Click(Sender: TObject);
 var
   adotemp11:tadoquery;
-  IdIPWatch:TIdIPWatch;
-  sLocalIP,sLocalName,ss1,ss2,ss3:string;
+  ss1,ss2,ss3:string;
 begin
   if not DBGrid1.DataSource.DataSet.Active then exit;
   if DBGrid1.DataSource.DataSet.RecordCount=0 then exit;
@@ -335,12 +323,7 @@ begin
     adoquery1.Refresh;
     updateEdit;
 
-    IdIPWatch:=TIdIPWatch.Create(nil);
-    IdIPWatch.HistoryEnabled:=false;
-    sLocalIP:=IdIPWatch.LocalIP;
-    sLocalName:=IdIPWatch.LocalName;
-    IdIPWatch.Free;
-    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''删除通用代码'',getdate(),''代码类型:'+ss1+',代码:'+ss2+',名称:'+ss3+''','''+sLocalName+''')');
+    ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+gsLocalIP+''','''+operator_name+''',''删除通用代码'',getdate(),''代码类型:'+ss1+',代码:'+ss2+',名称:'+ss3+''','''+gsLocalName+''')');
 end;
 
 procedure TfrmCommCode.updateAdoQuery1;

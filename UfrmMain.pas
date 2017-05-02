@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Menus, ComCtrls, ToolWin, Buttons,ShellAPI,StrUtils, DB, ADODB,
-  Inifiles,IdIPWatch,HTTPApp,IdHashMessageDigest,IdHash,IdHTTP;
+  Inifiles,HTTPApp,IdHashMessageDigest,IdHash,IdHTTP;
 
 //==为了通过发送消息更新主窗体状态栏而增加==//
 const
@@ -96,8 +96,6 @@ var
   adotemp22:tadoquery;
   pInStr,pDeStr:Pchar;
   i:integer;
-  IdIPWatch:TIdIPWatch;
-  sLocalIP,sLocalName:string;
   s1,s3,sort_params,sign:string;
   MyMD5: TIdHashMessageDigest5;
   Digest: T4x4LongWordRecord;
@@ -130,14 +128,8 @@ begin
   ReadIni;
 
   //调用用户信息接口start
-  IdIPWatch:=TIdIPWatch.Create(nil);
-  IdIPWatch.HistoryEnabled:=false;
-  sLocalIP:=IdIPWatch.LocalIP;
-  sLocalName:=IdIPWatch.LocalName;
-  IdIPWatch.Free;
-  
   //t1:=FormatDateTime('YYYY-MM-DD hh:nn:ss',now);
-  s1:='insert into AppVisit (SysName,PageName,IP,ComputerName,Customer,UserName,ActionName,ActionTime) values ('''+SYSNAME+''','''+Name+''','''+sLocalIP+''','''+sLocalName+''','''+SCSYDW+''','''+operator_name+''','''+'Show'+''',getdate())';
+  s1:='insert into AppVisit (SysName,PageName,IP,ComputerName,Customer,UserName,ActionName,ActionTime) values ('''+SYSNAME+''','''+Name+''','''+gsLocalIP+''','''+gsLocalName+''','''+SCSYDW+''','''+operator_name+''','''+'Show'+''',getdate())';
   s3:='methodNum='+HTTPEncode(UTF8Encode('AIF012'));
   //s3:=s3+'&customer='+(HTTPEncode(UTF8Encode(SCSYDW)));
   //s3:=s3+'&actionTime='+HTTPEncode(UTF8Encode(t1));
