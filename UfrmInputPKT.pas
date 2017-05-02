@@ -552,6 +552,14 @@ begin
   ADOQuery1.Requery([]);
 
   AdoQuery1.Locate('Unid',iUnid,[loCaseInsensitive]) ;
+
+  IdIPWatch:=TIdIPWatch.Create(nil);
+  IdIPWatch.HistoryEnabled:=false;
+  sLocalIP:=IdIPWatch.LocalIP;
+  sLocalName:=IdIPWatch.LocalName;
+  IdIPWatch.Free;
+  ExecSQLCmd(LisConn,'insert into AppVisit (IP,UserName,ActionName,ActionTime,Reserve4,ComputerName) values ('''+sLocalIP+''','''+operator_name+''',''释放出库单'',getdate(),''单号:'+ss1+''','''+sLocalName+''')');
+
 end;
 
 procedure TfrmInputPKT.ADOQuery1AfterOpen(DataSet: TDataSet);
