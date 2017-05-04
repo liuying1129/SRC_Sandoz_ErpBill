@@ -9,7 +9,7 @@ go
 
 --INF_INPT_PKT_DTL_C
 IF not EXISTS (select 1 from syscolumns where name='Amount' and id=object_id('INF_INPT_PKT_DTL_C'))
-  Alter table INF_INPT_PKT_DTL_C add Amount varchar(50) null
+  Alter table INF_INPT_PKT_DTL_C add Amount Money null
 GO
 
 

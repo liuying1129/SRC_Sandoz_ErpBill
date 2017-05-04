@@ -68,6 +68,7 @@ type
     ComboBox2: TLabeledEdit;
     SpeedButton6: TSpeedButton;
     OpenDialog1: TOpenDialog;
+    LabeledEdit20: TLabeledEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -600,6 +601,7 @@ begin
   //LabeledEdit17.Clear;//药检份数
   LabeledEdit18.Clear;
   LabeledEdit19.Clear;
+  LabeledEdit20.Clear;
 
   if LabeledEdit6.CanFocus then LabeledEdit6.SetFocus;
 
@@ -622,6 +624,8 @@ var
   fQTY:single;
   QTY:string;
   ss1,ss2:string;
+  Amount:string;
+  fAmount:single;
 begin
   if not ifhaspower(sender,powerstr_js_main) then exit;
 
@@ -650,6 +654,14 @@ begin
   begin
     MessageDlg('数量不正确,请重新输入!', mtError, [mbYes], 0);
     if LabeledEdit12.CanFocus then LabeledEdit12.SetFocus;
+    exit;
+  end;
+
+  Amount:=LabeledEdit20.Text;
+  if not trystrtofloat(Amount,fAmount) then
+  begin
+    MessageDlg('金额不正确,请重新输入!', mtError, [mbYes], 0);
+    if LabeledEdit20.CanFocus then LabeledEdit20.SetFocus;
     exit;
   end;
 
@@ -695,11 +707,11 @@ begin
 
     ss1:=LabeledEdit6.Text;
 
-    sqlstr:='insert into inf_inpt_pkt_dtl_c (EXPORDERDTLID,GOODSID,LOTNO,GOODSTATUS,QTY,ADDMEDCHECKFLAG,DTLMEMO,INVOICETYPE,PKUNID,SRCID) ' +
+    sqlstr:='insert into inf_inpt_pkt_dtl_c (EXPORDERDTLID,GOODSID,LOTNO,GOODSTATUS,QTY,ADDMEDCHECKFLAG,DTLMEMO,INVOICETYPE,PKUNID,SRCID,Amount) ' +
           ' values (''' + LabeledEdit6.Text + ''',''' + LabeledEdit7.Text+ ''',''' + LabeledEdit8.Text + ''','''+
           LabeledEdit9.Text+ ''',' + QTY + ',''' + LabeledEdit17.Text + ''',''' + LabeledEdit14.Text+ ''',''' + ifThen(ComboBox4.Text='增值','1','0') + ''',' +
-          inttostr(iPKUNID) + ',''' + sSRCID +
-          ''')';
+          inttostr(iPKUNID) + ',''' + sSRCID + ''','+ Amount +
+          ')';
 
     adotemp11.Close;
     adotemp11.SQL.Clear;
@@ -734,7 +746,8 @@ begin
                  ''',DTLMEMO=''' + LabeledEdit14.Text +
                  ''',INVOICETYPE=''' + ifThen(ComboBox4.Text='增值','1','0') +
                  ''',SRCID=''' + sSRCID +
-    '''  Where    Unid='+inttostr(Insert_Identity);
+                 ''',Amount=' + Amount +
+    '  Where    Unid='+inttostr(Insert_Identity);
     try
       adotemp11.EXECSql ;
 
@@ -771,7 +784,8 @@ begin
   LabeledEdit17.Text:=ADOQuery2.fieldbyname('药检份数').AsString;
   LabeledEdit18.Text:=ADOQuery2.fieldbyname('供应商代码').AsString;
   LabeledEdit19.Text:=ADOQuery2.fieldbyname('供应商名称').AsString;
-  
+  LabeledEdit20.Text:=ADOQuery2.fieldbyname('金额').AsString;
+
   if not trystrtoint(AdoQuery2.fieldbyname('发票类型').AsString,iINVOICETYPE) then iINVOICETYPE:=0;
   ComboBox4.ItemIndex:=iINVOICETYPE;
 end;
@@ -789,7 +803,7 @@ begin
   'LOTNO as 批号,GOODSTATUS as 锁代码,c4.name as 锁名称,QTY as 数量,'+
   'SRCID as 供应商代码,C3.NAME AS 供应商名称,'+
   'INVOICETYPE as 发票类型,OTCFLAG as OTC,'+
-  'ADDMEDCHECKFLAG as 药检份数,DTLMEMO as 细单备注,PKUNID,c.unid '+
+  'ADDMEDCHECKFLAG as 药检份数,DTLMEMO as 细单备注,Amount as 金额,PKUNID,c.unid '+
   'from INF_INPT_PKT_DTL_C C '+
   'left join CommCode c2 on c2.TypeName=''商品资料'' and c2.id=C.GOODSid '+
   'left join CommCode c3 on c3.TypeName=''客户资料'' and c3.id=C.SRCID '+
@@ -975,6 +989,9 @@ var
   iQTY:integer;
   fQTY:single;
   sIFSHIFANG:string;
+
+  Amount:string;
+  fAmount:single;
 begin
   OpenDialog1.DefaultExt := '.xls';
   OpenDialog1.Filter := 'xls (*.xls)|*.xls';
@@ -1072,6 +1089,14 @@ begin
     if ADDMEDCHECKFLAG='' then ADDMEDCHECKFLAG:='1';
     if adotemp11.FindField('细单备注')<>nil then DTLMEMO:=adotemp11.fieldbyname('细单备注').AsString;
 
+    Amount:='0';//兼容EXCEL中无金额(Value)字段的情况
+    if adotemp11.FindField('Value')<>nil then Amount:=adotemp11.fieldbyname('Value').AsString;//金额
+    if not trystrtofloat(Amount,fAmount) then
+    begin
+      MessageDlg('订单总单ID"'+EXPORDERID+'"无效金额,已中止导入!',mtError,[mbOK],0);
+      break;
+    end;
+    
     //判断是否存在指定的订单总单ID start
     adotemp22:=tadoquery.create(nil);
     adotemp22.Connection:=dm.ADOConnection1;
@@ -1141,11 +1166,11 @@ begin
       adotemp33.Connection:=dm.ADOConnection1;
       adotemp33.Close;
       adotemp33.SQL.Clear;
-      adotemp33.SQL.Add('insert into inf_inpt_pkt_dtl_c (EXPORDERDTLID,GOODSID,LOTNO,GOODSTATUS,QTY,ADDMEDCHECKFLAG,DTLMEMO,INVOICETYPE,PKUNID,SRCID) ' +
+      adotemp33.SQL.Add('insert into inf_inpt_pkt_dtl_c (EXPORDERDTLID,GOODSID,LOTNO,GOODSTATUS,QTY,ADDMEDCHECKFLAG,DTLMEMO,INVOICETYPE,PKUNID,SRCID,Amount) ' +
                         ' values (''' + EXPORDERDTLID + ''',''' + GOODSID+ ''',''' + LOTNO + ''','''+
                         GOODSTATUS+ ''',' + QTY+ ',''' + ADDMEDCHECKFLAG + ''',''' + DTLMEMO+ ''',''' +'1'+ ''',' +
-                        inttostr(ValetudinarianInfoId) + ',''' + SRCID +
-                        ''')');
+                        inttostr(ValetudinarianInfoId) + ',''' + SRCID + ''',' + Amount +
+                        ')');
       try
         adotemp33.ExecSQL;
 

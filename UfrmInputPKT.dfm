@@ -24,7 +24,7 @@ object frmInputPKT: TfrmInputPKT
     Left = 0
     Top = 0
     Width = 784
-    Height = 329
+    Height = 315
     Align = alClient
     Caption = #24635#21333
     TabOrder = 0
@@ -32,7 +32,7 @@ object frmInputPKT: TfrmInputPKT
       Left = 2
       Top = 15
       Width = 265
-      Height = 312
+      Height = 298
       Align = alLeft
       TabOrder = 0
       object Label1: TLabel
@@ -44,28 +44,28 @@ object frmInputPKT: TfrmInputPKT
       end
       object Label2: TLabel
         Left = 79
-        Top = 195
+        Top = 190
         Width = 39
         Height = 13
         Caption = #21516#25209#21495
       end
       object Label6: TLabel
         Left = 92
-        Top = 219
+        Top = 212
         Width = 26
         Height = 13
         Caption = #20445#31246
       end
       object Label5: TLabel
         Left = 79
-        Top = 171
+        Top = 167
         Width = 39
         Height = 13
         Caption = #38468#21457#31080
       end
       object SpeedButton1: TSpeedButton
         Left = 21
-        Top = 263
+        Top = 254
         Width = 110
         Height = 22
         Caption = #26032#22686'(F2)'
@@ -73,7 +73,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object SpeedButton3: TSpeedButton
         Left = 21
-        Top = 286
+        Top = 277
         Width = 110
         Height = 22
         Caption = #21024#38500'PKT'#20027#21333'(F4)'
@@ -81,7 +81,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object SpeedButton2: TSpeedButton
         Left = 187
-        Top = 286
+        Top = 277
         Width = 55
         Height = 22
         Caption = #26597#35810
@@ -89,7 +89,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object SpeedButton6: TSpeedButton
         Left = 132
-        Top = 286
+        Top = 277
         Width = 55
         Height = 22
         Caption = #23548#20837
@@ -128,7 +128,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object LabeledEdit5: TLabeledEdit
         Left = 120
-        Top = 239
+        Top = 230
         Width = 121
         Height = 21
         EditLabel.Width = 52
@@ -139,7 +139,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object BitBtn2: TBitBtn
         Left = 132
-        Top = 263
+        Top = 254
         Width = 110
         Height = 22
         Caption = #20445#23384'PKT'#20027#21333'(F3)'
@@ -148,7 +148,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object LabeledEdit2: TComboBox
         Left = 120
-        Top = 191
+        Top = 186
         Width = 121
         Height = 21
         ItemHeight = 13
@@ -159,7 +159,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object LabeledEdit3: TComboBox
         Left = 120
-        Top = 215
+        Top = 208
         Width = 121
         Height = 21
         ItemHeight = 13
@@ -182,7 +182,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object LabeledEdit13: TLabeledEdit
         Left = 120
-        Top = 143
+        Top = 141
         Width = 121
         Height = 21
         EditLabel.Width = 52
@@ -194,7 +194,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object ComboBox3: TComboBox
         Left = 120
-        Top = 167
+        Top = 163
         Width = 121
         Height = 21
         ItemHeight = 13
@@ -231,7 +231,7 @@ object frmInputPKT: TfrmInputPKT
       Left = 267
       Top = 15
       Width = 515
-      Height = 312
+      Height = 298
       Align = alClient
       DataSource = DataSource1
       ParentShowHint = False
@@ -248,9 +248,9 @@ object frmInputPKT: TfrmInputPKT
   end
   object GroupBox2: TGroupBox
     Left = 0
-    Top = 329
+    Top = 315
     Width = 784
-    Height = 318
+    Height = 332
     Align = alBottom
     Caption = #32454#21333
     TabOrder = 1
@@ -258,19 +258,19 @@ object frmInputPKT: TfrmInputPKT
       Left = 2
       Top = 15
       Width = 265
-      Height = 301
+      Height = 315
       Align = alLeft
       TabOrder = 0
       object Label7: TLabel
         Left = 66
-        Top = 254
+        Top = 251
         Width = 52
         Height = 13
         Caption = #21457#31080#31867#22411
       end
       object SpeedButton4: TSpeedButton
         Left = 0
-        Top = 274
+        Top = 291
         Width = 53
         Height = 22
         Caption = #26032#22686'(F6)'
@@ -278,7 +278,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object SpeedButton5: TSpeedButton
         Left = 158
-        Top = 274
+        Top = 291
         Width = 105
         Height = 22
         Caption = #21024#38500'PKT'#26126#32454'(F8)'
@@ -306,7 +306,7 @@ object frmInputPKT: TfrmInputPKT
         EditLabel.Caption = #21697#21517#35268#26684
         Enabled = False
         LabelPosition = lpLeft
-        TabOrder = 9
+        TabOrder = 10
       end
       object LabeledEdit6: TLabeledEdit
         Left = 120
@@ -352,7 +352,7 @@ object frmInputPKT: TfrmInputPKT
         EditLabel.Caption = #38145#21517#31216
         Enabled = False
         LabelPosition = lpLeft
-        TabOrder = 10
+        TabOrder = 11
       end
       object LabeledEdit12: TLabeledEdit
         Left = 120
@@ -367,7 +367,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object LabeledEdit14: TLabeledEdit
         Left = 120
-        Top = 227
+        Top = 224
         Width = 121
         Height = 21
         EditLabel.Width = 52
@@ -378,7 +378,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object LabeledEdit17: TLabeledEdit
         Left = 120
-        Top = 203
+        Top = 202
         Width = 121
         Height = 21
         EditLabel.Width = 52
@@ -401,7 +401,7 @@ object frmInputPKT: TfrmInputPKT
       end
       object LabeledEdit19: TLabeledEdit
         Left = 120
-        Top = 181
+        Top = 180
         Width = 121
         Height = 21
         EditLabel.Width = 65
@@ -409,11 +409,11 @@ object frmInputPKT: TfrmInputPKT
         EditLabel.Caption = #20379#24212#21830#21517#31216
         Enabled = False
         LabelPosition = lpLeft
-        TabOrder = 11
+        TabOrder = 12
       end
       object ComboBox4: TComboBox
         Left = 120
-        Top = 250
+        Top = 247
         Width = 121
         Height = 21
         ItemHeight = 13
@@ -424,19 +424,30 @@ object frmInputPKT: TfrmInputPKT
       end
       object BitBtn1: TBitBtn
         Left = 53
-        Top = 274
+        Top = 291
         Width = 105
         Height = 22
         Caption = #20445#23384'PKT'#26126#32454'(F7)'
-        TabOrder = 12
+        TabOrder = 13
         OnClick = BitBtn1Click
+      end
+      object LabeledEdit20: TLabeledEdit
+        Left = 120
+        Top = 269
+        Width = 121
+        Height = 21
+        EditLabel.Width = 26
+        EditLabel.Height = 13
+        EditLabel.Caption = #37329#39069
+        LabelPosition = lpLeft
+        TabOrder = 9
       end
     end
     object DBGrid2: TDBGrid
       Left = 267
       Top = 15
       Width = 515
-      Height = 301
+      Height = 315
       Align = alClient
       DataSource = DataSource2
       ReadOnly = True
