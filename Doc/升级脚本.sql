@@ -5,7 +5,37 @@ go
 
 ---------------表相关操作---------------
 
---新增表AppVisit，使用LIS中该表的脚本
+--新增表AppVisit，与LIS中该表一致
+if not exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AppVisit]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table AppVisit
+ (Unid int identity primary key,
+  SysName varchar (20) NULL,
+  PageName varchar (10) NULL,
+  IP varchar (20) NULL,
+  Customer varchar (50) NULL,
+  UserName varchar (20) NULL,
+  ActionName varchar (50) NULL,
+  ActionTime datetime NULL,
+  Remark varchar (100) NULL,
+  Reserve varchar(100) NULL,
+  Reserve2 varchar (200) NULL,
+  Reserve3 varchar (200) NULL,
+  Reserve4 varchar (200) NULL,
+  Reserve5 int NULL,
+  Reserve6 int NULL,
+  Reserve7 float NULL,
+  Reserve8 float NULL,
+  Reserve9 datetime NULL,
+  Reserve10 datetime NULL,
+  Create_Date_Time datetime NULL DEFAULT (getdate())
+)
+GO
+
+IF NOT EXISTS (select 1 from syscolumns where name='ComputerName' and id=object_id('AppVisit'))
+begin
+  Alter table AppVisit add ComputerName varchar (50) null--计算机名称
+end
+go
 
 --INF_INPT_PKT_DTL_C
 IF not EXISTS (select 1 from syscolumns where name='Amount' and id=object_id('INF_INPT_PKT_DTL_C'))
