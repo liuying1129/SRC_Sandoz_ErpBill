@@ -625,7 +625,7 @@ var
   QTY:string;
   ss1,ss2:string;
   Amount:string;
-  fAmount:single;
+  //fAmount:single;
 begin
   if not ifhaspower(sender,powerstr_js_main) then exit;
 
@@ -658,12 +658,12 @@ begin
   end;
 
   Amount:=LabeledEdit20.Text;
-  if not trystrtofloat(Amount,fAmount) then
+  {if not trystrtofloat(Amount,fAmount) then
   begin
     MessageDlg('金额不正确,请重新输入!', mtError, [mbYes], 0);
     if LabeledEdit20.CanFocus then LabeledEdit20.SetFocus;
     exit;
-  end;
+  end;//}
 
   sSRCID:='0';
 
@@ -710,8 +710,8 @@ begin
     sqlstr:='insert into inf_inpt_pkt_dtl_c (EXPORDERDTLID,GOODSID,LOTNO,GOODSTATUS,QTY,ADDMEDCHECKFLAG,DTLMEMO,INVOICETYPE,PKUNID,SRCID,Amount) ' +
           ' values (''' + LabeledEdit6.Text + ''',''' + LabeledEdit7.Text+ ''',''' + LabeledEdit8.Text + ''','''+
           LabeledEdit9.Text+ ''',' + QTY + ',''' + LabeledEdit17.Text + ''',''' + LabeledEdit14.Text+ ''',''' + ifThen(ComboBox4.Text='增值','1','0') + ''',' +
-          inttostr(iPKUNID) + ',''' + sSRCID + ''','+ Amount +
-          ')';
+          inttostr(iPKUNID) + ',''' + sSRCID + ''','''+ Amount +
+          ''')';
 
     adotemp11.Close;
     adotemp11.SQL.Clear;
@@ -746,8 +746,8 @@ begin
                  ''',DTLMEMO=''' + LabeledEdit14.Text +
                  ''',INVOICETYPE=''' + ifThen(ComboBox4.Text='增值','1','0') +
                  ''',SRCID=''' + sSRCID +
-                 ''',Amount=' + Amount +
-    '  Where    Unid='+inttostr(Insert_Identity);
+                 ''',Amount=''' + Amount +
+    '''  Where    Unid='+inttostr(Insert_Identity);
     try
       adotemp11.EXECSql ;
 
