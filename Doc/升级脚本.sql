@@ -39,7 +39,7 @@ go
 
 --INF_INPT_PKT_DTL_C
 IF not EXISTS (select 1 from syscolumns where name='Amount' and id=object_id('INF_INPT_PKT_DTL_C'))
-  Alter table INF_INPT_PKT_DTL_C add Amount Money null
+  Alter table INF_INPT_PKT_DTL_C add Amount varchar(20) null
 GO
 
 
@@ -104,7 +104,7 @@ SELECT
 	[PLACESUPPLYDTLID]  ,
 	[PLACEPRICE] ,
 	[RESALEPRICE]  ,
-	[PLACEMONEY] ,
+	Amount as PLACEMONEY ,
 	[OTCFLAG] ,
 	[TRADEMARK] ,
 	[QUALITYDOCNO]  ,
@@ -118,12 +118,11 @@ SELECT
 	[SPECIALTYPE]  ,
 	[DEPTNO]  ,
 	[DEPTNAME]  ,
-	[AMT]  ,
+	Amount as AMT  ,
 	[WHID],
 	[ORDERFLAG]  ,
 	[SRCID],
-	[GOODSSUPPLYID],
-        [Amount] 
+	[GOODSSUPPLYID]
 
 	FROM INF_INPT_PKT_DTL_Z Z,INF_INPT_PKT_DTL_C C
 WHERE Z.UNID=C.PKUNID
